@@ -16,15 +16,38 @@ namespace WpfApp1.ViewModel
 {
     public class CarViewModel : INotifyPropertyChanged
     {
+        private Car selectedCar; //выделенные в списке данные по автомобилю
+        public Car SelectedCar
+        {
+            get { return selectedCar; }
+            set
+            {
+                selectedCar = value;
+                OnPropertyChanged("SelectedCar");
+            }
+        }
+        // коллекция данных по автомобилям
+        public ObservableCollection<Car> ListCar { get; set; } =
+        new ObservableCollection<Car>();
+        public CarViewModel()
+        {
+            // Читаем данные из базы данных в коллекцию
+            using (var db = new AppDbContext())
+            {
+                db.Database.EnsureCreated();
+                foreach (var car in db.Cars.ToList())
+                    ListCar.Add(car);
+            }
+        }
         // Нахождение максимального Id в коллекции данных
         public int MaxId()
         {
             int max = 0;
             foreach (var per in this.ListCar)
             {
-                if (max < per.Id)
+                if (max < per.carId)
                 {
-                    max = per.Id;
+                    max = per.carId;
                 };
             }
             return max;
@@ -44,17 +67,24 @@ namespace WpfApp1.ViewModel
                     };
                     // формирование кода нового автомобиля
                     int maxIdCar = MaxId() + 1;
-                    Car person = new Car
+                    Car car = new Car
                     {
-                        Id = maxIdCar,
+                        carId = maxIdCar,
                         Arrival = DateTime.Now
                     };
-                    wnCar.DataContext = person;
+                    wnCar.DataContext = car;
                     if (wnCar.ShowDialog() == true)
                     {
-                        ListCar.Add(person);
+                        // Добавляем данные в базу данных
+                        using (var db = new AppDbContext())
+                        {
+                            db.Cars.Add(car);
+                            db.SaveChanges();
+                        }
+                        // Добавляем данные в коллекцию
+                        ListCar.Add(car);
                     }
-                    SelectedCar = person;
+                    SelectedCar = car;
                 }));
             }
         }
@@ -71,13 +101,19 @@ namespace WpfApp1.ViewModel
                     {
                         Title = "Редактирование данных автомобиля",
                     };
-                    Car person = SelectedCar;
-                    Car tempCar = person;
+                    Car car = SelectedCar;
+                    Car tempCar = car;
                     wnCar.DataContext = tempCar;
                     if (wnCar.ShowDialog() == true)
                     {
                         // сохранение данных в оперативной памяти
-                        person = tempCar;
+                        car = tempCar;
+                        // Обновляем данные в базе данных
+                        using (var db = new AppDbContext())
+                        {
+                            db.Cars.Update(car);
+                            db.SaveChanges();
+                        }
                     }
                 }, (obj) => SelectedCar != null && ListCar.Count > 0));
             }
@@ -91,73 +127,27 @@ namespace WpfApp1.ViewModel
                 return deleteCar ??
                 (deleteCar = new RelayCommand(obj =>
                 {
-                    Car person = SelectedCar;
-                    MessageBoxResult result = MessageBox.Show("Удалить данные по автомобилю: \n" +
-    person.Model + " " + person.Manufacturer,
-    "Предупреждение", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                    Car car = SelectedCar;
+                    MessageBoxResult result = MessageBox.Show("Удалить данные по автомобилю: \n" + car.Model + " " + car.Manufacturer, "Предупреждение", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
                     if (result == MessageBoxResult.OK)
                     {
-                        // удаление данных в списке отображения данных
-                        ListCar.Remove(person);
+                        // Удаляем данные из базы данных
+                        using (var db = new AppDbContext())
+                        {
+                            db.Cars.Remove(car);
+                            db.SaveChanges();
+                        }
+                        // удаление данных в коллекции
+                        ListCar.Remove(car);
                     }
                 }, (obj) => SelectedCar != null && ListCar.Count > 0));
             }
         }
-
-        private Car selectedCar; //выделенные в списке данные по автомобилю
-        public Car SelectedCar
-        {
-            get { return selectedCar; }
-            set
-            {
-                selectedCar = value;
-                OnPropertyChanged("SelectedCar");
-            }
-        }
-        // коллекция данных по автомобилям
-        public ObservableCollection<Car> ListCar { get; set; } =
-        new ObservableCollection<Car>();
-        public CarViewModel()
-        {
-            this.ListCar.Add(new Car
-            {
-                Id = 1,
-                Manufacturer = "Lixiang",
-                Model = "L9",
-                Quantity = 6,
-                Arrival = new DateTime(2024, 02, 28)
-            });
-            this.ListCar.Add(new Car
-            {
-                Id = 2,
-                Manufacturer = "BMW",
-                Model = "M3 GTR",
-                Quantity = 1,
-                Arrival = new DateTime(2024, 03, 20)
-            });
-            this.ListCar.Add(new Car
-            {
-                Id = 3,
-                Manufacturer = "Changan",
-                Model = "UNI-V",
-                Quantity = 4,
-                Arrival = new DateTime(2024, 04, 15)
-            });
-            this.ListCar.Add(new Car
-            {
-                Id = 4,
-                Manufacturer = "Xiaomi",
-                Model = "SU7",
-                Quantity = 2,
-                Arrival = new DateTime(2025, 05, 10)
-            });
-        }
         public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName]
-string propertyName = "")
+        // [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
     }
 }

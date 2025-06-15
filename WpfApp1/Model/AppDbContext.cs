@@ -9,7 +9,7 @@ namespace WpfApp1.Model
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<Car> Persons { get; set; }
+        public DbSet<Car> Cars { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Строка подключения

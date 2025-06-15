@@ -11,7 +11,7 @@ namespace WpfApp1.Model
 {
     public class Car : INotifyPropertyChanged
     {
-        public int Id { get; set; }
+        public int carId { get; set; }
         private string manufacturerString;
         [Column("manufacturer")] //имя автомобиля
         public string Manufacturer
@@ -60,7 +60,7 @@ namespace WpfApp1.Model
         public Car(int id, string manufacturerString, string modelString, int quantity, DateTime
        arrivalDate)
         {
-            this.Id = id;
+            this.carId = id;
             this.Manufacturer = manufacturerString;
             this.Model = modelString;
             this.Quantity = quantity;

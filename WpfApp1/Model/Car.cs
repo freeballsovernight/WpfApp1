@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +12,8 @@ namespace WpfApp1.Model
     public class Car : INotifyPropertyChanged
     {
         public int Id { get; set; }
-        private string manufacturerString; //имя автомобиля
+        private string manufacturerString;
+        [Column("manufacturer")] //имя автомобиля
         public string Manufacturer
         {
             get { return manufacturerString; }
@@ -22,6 +24,7 @@ namespace WpfApp1.Model
             }
         }
         private string modelString; //фамилия автомобиля
+        [Column("model")]
         public string Model
         {
             get { return modelString; }
@@ -32,6 +35,7 @@ namespace WpfApp1.Model
             }
         }
         private int quantity; // должность автомобиля
+        [Column("quantity")]
         public int Quantity
         {
             get { return quantity; }
@@ -42,6 +46,7 @@ namespace WpfApp1.Model
             }
         }
         private DateTime arrivalDate; //дата рождения автомобиля
+        [Column("arrival")]
         public DateTime Arrival
         {
             get { return arrivalDate; }

@@ -145,6 +145,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Helper\RelayCommand.cs" />
+    <Compile Include="Model\AppDbContext.cs" />
     <Compile Include="View\WindowNewCar.xaml.cs">
       <DependentUpon>WindowNewCar.xaml</DependentUpon>
     </Compile>

@@ -29,7 +29,7 @@ namespace WpfApp1.ViewModel
             }
             return max;
         }
-        // добавление сотрудника
+        // добавление автомобиля
         private RelayCommand addCar;
         public RelayCommand AddCar
         {
@@ -40,9 +40,9 @@ namespace WpfApp1.ViewModel
                 {
                     WindowNewCar wnCar = new WindowNewCar
                     {
-                        Title = "Новый сотрудник"
+                        Title = "Новый автомобиль"
                     };
-                    // формирование кода нового сотрудника
+                    // формирование кода нового автомобиля
                     int maxIdCar = MaxId() + 1;
                     Car person = new Car
                     {
@@ -58,7 +58,7 @@ namespace WpfApp1.ViewModel
                 }));
             }
         }
-        // команда редактирования данных по сотруднику
+        // команда редактирования данных по автомобилю
         private RelayCommand editCar;
         public RelayCommand EditCar
         {
@@ -69,7 +69,7 @@ namespace WpfApp1.ViewModel
                 {
                     WindowNewCar wnCar = new WindowNewCar()
                     {
-                        Title = "Редактирование данных сотрудника",
+                        Title = "Редактирование данных автомобиля",
                     };
                     Car person = SelectedCar;
                     Car tempCar = person;
@@ -82,7 +82,7 @@ namespace WpfApp1.ViewModel
                 }, (obj) => SelectedCar != null && ListCar.Count > 0));
             }
         }
-        // Удаление данных по сотруднику
+        // Удаление данных по автомобилю
         private RelayCommand deleteCar;
         public RelayCommand DeleteCar
         {
@@ -92,7 +92,7 @@ namespace WpfApp1.ViewModel
                 (deleteCar = new RelayCommand(obj =>
                 {
                     Car person = SelectedCar;
-                    MessageBoxResult result = MessageBox.Show("Удалить данные по сотруднику: \n" +
+                    MessageBoxResult result = MessageBox.Show("Удалить данные по автомобилю: \n" +
     person.Model + " " + person.Manufacturer,
     "Предупреждение", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
                     if (result == MessageBoxResult.OK)
@@ -104,7 +104,7 @@ namespace WpfApp1.ViewModel
             }
         }
 
-        private Car selectedCar; //выделенные в списке данные по сотруднику
+        private Car selectedCar; //выделенные в списке данные по автомобилю
         public Car SelectedCar
         {
             get { return selectedCar; }
@@ -114,7 +114,7 @@ namespace WpfApp1.ViewModel
                 OnPropertyChanged("SelectedCar");
             }
         }
-        // коллекция данных по сотрудникам
+        // коллекция данных по автомобилям
         public ObservableCollection<Car> ListCar { get; set; } =
         new ObservableCollection<Car>();
         public CarViewModel()

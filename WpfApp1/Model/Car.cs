@@ -11,7 +11,7 @@ namespace WpfApp1.Model
     public class Car : INotifyPropertyChanged
     {
         public int Id { get; set; }
-        private string manufacturerString; //имя сотрудника
+        private string manufacturerString; //имя автомобиля
         public string Manufacturer
         {
             get { return manufacturerString; }
@@ -21,7 +21,7 @@ namespace WpfApp1.Model
                 OnPropertyChanged("Manufacturer");
             }
         }
-        private string modelString; //фамилия сотрудника
+        private string modelString; //фамилия автомобиля
         public string Model
         {
             get { return modelString; }
@@ -31,7 +31,7 @@ namespace WpfApp1.Model
                 OnPropertyChanged("Model");
             }
         }
-        private int quantity; // должность сотрудника
+        private int quantity; // должность автомобиля
         public int Quantity
         {
             get { return quantity; }
@@ -41,7 +41,7 @@ namespace WpfApp1.Model
                 OnPropertyChanged("Quantity");
             }
         }
-        private DateTime arrivalDate; //дата рождения сотрудника
+        private DateTime arrivalDate; //дата рождения автомобиля
         public DateTime Arrival
         {
             get { return arrivalDate; }
